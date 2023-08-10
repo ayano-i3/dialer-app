@@ -1,30 +1,25 @@
 package com.example.dialerapp;
 
-import static android.content.ContentValues.TAG;
-
-import static java.security.AccessController.getContext;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.ActivityNotFoundException;
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.dialerapp.databinding.ActivityMainBinding;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private static final int REQUEST_CALL_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         binding.callButton.setOnClickListener(v -> {
-//            callPhone();
+            makePhoneCall();
         });
 
 
@@ -120,15 +115,40 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    private void makePhoneCall() {
+        String phoneNumber = binding.phoneNumberText.getText().toString();
+        if (phoneNumber.length() > 0) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CALL_PHONE},
+                        REQUEST_CALL_PERMISSION);
+            } else {
+                callPhone();
+            }
+        }
 
-//    private void callPhone() {
-//        String phoneNumber = binding.phoneNumberText.getText().toString();
-//        String dial = "tel:" + phoneNumber;
-//        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(dial));
-//
-//        startActivity(intent);
-//
-//    }
+    }
 
+    private void callPhone() {
+        String phoneNumber = binding.phoneNumberText.getText().toString();
+        String dial = "tel:" + phoneNumber;
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(dial));
+
+        startActivity(intent);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CALL_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                callPhone();
+            } else {
+                Toast.makeText(this, "全ての権限を拒否しました", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 }
