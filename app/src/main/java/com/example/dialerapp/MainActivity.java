@@ -1,4 +1,4 @@
-package com.example.dialerapp;
+package com.okuda.dialerapp;
 
 import android.Manifest;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.dialerapp.databinding.ActivityMainBinding;
+import com.okuda.dialerapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;

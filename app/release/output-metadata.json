@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.dialerapp",
+  "applicationId": "com.okuda.dialerapp",
   "variantName": "release",
   "elements": [
     {
